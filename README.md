@@ -8,7 +8,7 @@ Run `mvn clean package` and it will fail with:
 [ERROR] /srv/git/cosium/jigsaw-elasticsearch/src/main/java/module-info.java:[7,14] module not found: elasticsearch
 ```
 
-Debugging `maven-compiler-plugin` that lead to `jdk.internal.module.ModulePath`.
+Debugging `maven-compiler-plugin` lead to `jdk.internal.module.ModulePath`.
 It fails in `jdk.internal.module.ModulePath` at line 557:
 ```
 // parse each service configuration file

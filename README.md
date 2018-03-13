@@ -10,7 +10,7 @@ Run `mvn clean package` and it will fail with:
 
 Debugging `maven-compiler-plugin` lead to `jdk.internal.module.ModulePath`.
 It fails in `jdk.internal.module.ModulePath` at line 557:
-```
+```java
 // parse each service configuration file
         for (String sn : serviceNames) {
             JarEntry entry = jf.getJarEntry(SERVICES_PREFIX + sn);

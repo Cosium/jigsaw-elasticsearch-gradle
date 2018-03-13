@@ -36,9 +36,9 @@ It fails in `jdk.internal.module.ModulePath` at line 557:
 ```
 
 The issue comes from the fact that no elasticsearch packages match the following declared Java services:
-- org.apache.lucene.codecs.Codec
-- org.apache.lucene.codecs.DocValuesFormat
-- org.apache.lucene.codecs.PostingsFormat containing `org.apache.lucene.search.suggest.document.Completion50PostingsFormat`
+- server/src/main/resources/META-INF/services/org.apache.lucene.codecs.Codec
+- server/src/main/resources/META-INF/services/org.apache.lucene.codecs.DocValuesFormat
+- server/src/main/resources/META-INF/services/org.apache.lucene.codecs.PostingsFormat containing `org.apache.lucene.search.suggest.document.Completion50PostingsFormat`
 
 Adding fake classes to `org.apache.lucene.codecs` and `org.apache.lucene.search.suggest.document` fix the issue:
 - https://github.com/Cosium/elasticsearch/blob/e4cac84d72413d1abfaa0b975d8f0b6959310db5/server/src/main/java/org/apache/lucene/search/suggest/document/JigsawMarker.java

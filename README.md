@@ -11,6 +11,33 @@ Run `mvn clean package` and it will fail with:
 Debugging `maven-compiler-plugin` lead to `jdk.internal.module.ModulePath`.
 It fails in `jdk.internal.module.ModulePath` at line 557:
 ```java
+// scan the names of the entries in the JAR file
+        Map<Boolean, Set<String>> map = VersionedStream.stream(jf)
+                .filter(e -> !e.isDirectory())
+                .map(JarEntry::getName)
+                .filter(e -> (e.endsWith(".class") ^ e.startsWith(SERVICES_PREFIX)))
+                .collect(Collectors.partitioningBy(e -> e.startsWith(SERVICES_PREFIX),
+                                                   Collectors.toSet()));
+
+        Set<String> classFiles = map.get(Boolean.FALSE);
+        Set<String> configFiles = map.get(Boolean.TRUE);
+
+        // the packages containing class files
+        Set<String> packages = classFiles.stream()
+                .map(this::toPackageName)
+                .flatMap(Optional::stream)
+                .distinct()
+                .collect(Collectors.toSet());
+
+        // all packages are exported and open
+        builder.packages(packages);
+
+        // map names of service configuration files to service names
+        Set<String> serviceNames = configFiles.stream()
+                .map(this::toServiceName)
+                .flatMap(Optional::stream)
+                .collect(Collectors.toSet());
+
 // parse each service configuration file
         for (String sn : serviceNames) {
             JarEntry entry = jf.getJarEntry(SERVICES_PREFIX + sn);
